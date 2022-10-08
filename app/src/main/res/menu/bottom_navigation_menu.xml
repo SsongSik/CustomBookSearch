@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/fragment_search"
+        android:title="책 검색"
+        android:icon="@drawable/ic_search_24"
+        />
+
+    <item
+        android:id="@+id/fragment_favorite"
+        android:title="관심 목록"
+        android:icon="@drawable/ic_favorite_24"/>
+
+    <item
+        android:id="@+id/fragment_setting"
+        android:title="설정"
+        android:icon="@drawable/ic_settings_24"/>
+</menu>
