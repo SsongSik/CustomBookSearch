@@ -5,6 +5,7 @@ import com.example.booksearch.data.model.Book
 import com.example.booksearch.data.model.SearchResponse
 import com.example.booksearch.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class BookSearchViewModel(
@@ -35,7 +36,12 @@ class BookSearchViewModel(
         bookSearchRepository.deleteBooks(book)
     }
 
-    val favoriteBooks : LiveData<List<Book>> = bookSearchRepository.getFavoriteBooks()
+//    val favoriteBooks : LiveData<List<Book>> = bookSearchRepository.getFavoriteBooks()
+//    val favoriteBooks : Flow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    // StateFlow 로 변환해서 Flow 동작을 FavoriteFragment 라이프사이클하고 동기화
+    val favoriteBooks : StateFlow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
+    //Flow 타입을 변경함
 
     //담아두기 버튼을 클릭했을 때 장바구니에 이미 있을 경우 경고표시하기 위한 메서드
     private val _book = MutableLiveData<Book>()

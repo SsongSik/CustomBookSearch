@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,6 +18,8 @@ import com.example.booksearch.databinding.FragmentFavoriteBinding
 import com.example.booksearch.ui.adapter.BookSearchAdapter
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment(){
 
@@ -42,15 +47,47 @@ class FavoriteFragment : Fragment(){
         setUpRecyclerView()
         setupTouchHelper(view)
 
-        bookSearchViewModel.favoriteBooks.observe(viewLifecycleOwner){
-            //관심목록에 아무것도 없을 때
-            if(it.isEmpty()){
-                binding.favoriteFalseBooks.visibility = View.VISIBLE
-                binding.rvFavoriteBooks.visibility = View.INVISIBLE
-            }else {
-                binding.favoriteFalseBooks.visibility = View.INVISIBLE
-                binding.rvFavoriteBooks.visibility = View.VISIBLE
-                bookSearchAdapter.submitList(it)
+        //LiveData
+//        bookSearchViewModel.favoriteBooks.observe(viewLifecycleOwner){
+//            //관심목록에 아무것도 없을 때
+//            if(it.isEmpty()){
+//                binding.favoriteFalseBooks.visibility = View.VISIBLE
+//                binding.rvFavoriteBooks.visibility = View.INVISIBLE
+//            }else {
+//                binding.favoriteFalseBooks.visibility = View.INVISIBLE
+//                binding.rvFavoriteBooks.visibility = View.VISIBLE
+//                bookSearchAdapter.submitList(it)
+//            }
+//        }
+
+        //Flow
+        //flow 는 코루틴안에서 콜렉트를 사용해서 데이터를 구독해야함
+//        lifecycleScope.launch {
+//            bookSearchViewModel.favoriteBooks.collectLatest {
+//            if(it.isEmpty()){
+//                binding.favoriteFalseBooks.visibility = View.VISIBLE
+//                binding.rvFavoriteBooks.visibility = View.INVISIBLE
+//            }else {
+//                binding.favoriteFalseBooks.visibility = View.INVISIBLE
+//                binding.rvFavoriteBooks.visibility = View.VISIBLE
+//                bookSearchAdapter.submitList(it)
+//            }
+//            }
+//        }
+
+        //StateFlow
+        viewLifecycleOwner.lifecycleScope.launch{
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                bookSearchViewModel.favoriteBooks.collectLatest {
+                    if(it.isEmpty()){
+                        binding.favoriteFalseBooks.visibility = View.VISIBLE
+                        binding.rvFavoriteBooks.visibility = View.INVISIBLE
+                    }else {
+                        binding.favoriteFalseBooks.visibility = View.INVISIBLE
+                        binding.rvFavoriteBooks.visibility = View.VISIBLE
+                        bookSearchAdapter.submitList(it)
+                    }
+                }
             }
         }
     }
