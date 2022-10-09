@@ -7,6 +7,7 @@ import com.example.booksearch.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BookSearchViewModel(
     private val bookSearchRepository: BookSearchRepository,
@@ -18,7 +19,7 @@ class BookSearchViewModel(
         get() = _resultSearch
 
     fun searchBooks(query : String) = viewModelScope.launch(Dispatchers.IO){
-        val response = bookSearchRepository.searchBooks(query, "accuracy", 1, 15)
+        val response = bookSearchRepository.searchBooks(query, getSortMode(), 1, 15)
 
         if(response.isSuccessful){
             response.body()?.let{ body ->
@@ -66,4 +67,17 @@ class BookSearchViewModel(
     companion object{
         private const val SAVE_STATE_KEY = "query"
     }
+
+    //DataStore
+    //SortMode 저장
+    fun saveSortMode(value : String) = viewModelScope.launch(Dispatchers.IO) {
+        bookSearchRepository.saveSortMode(value)
+    }
+
+    //전체 데이터 스트림을 구독할 필요 없이 단일 스트림을 가져오기 때문에 first 사용
+    suspend fun getSortMode() = withContext(Dispatchers.IO) {
+        bookSearchRepository.getSortMode().first()
+    }
+
+
 }
