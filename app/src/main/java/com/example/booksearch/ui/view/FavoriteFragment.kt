@@ -124,8 +124,8 @@ class FavoriteFragment : Fragment(){
                 //위치의 book 을 찾음
                 val book = bookSearchAdapter.currentList[position]
                 bookSearchViewModel.deleteBook(book)
-                Snackbar.make(view, "Book has delete", Snackbar.LENGTH_SHORT).apply {
-                    setAction("Undo") {
+                Snackbar.make(view, "관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+                    setAction("취소") {
                         bookSearchViewModel.saveBook(book)
                     }
                 }.show()

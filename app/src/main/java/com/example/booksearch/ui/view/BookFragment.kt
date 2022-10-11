@@ -50,11 +50,11 @@ class BookFragment : Fragment(){
                 if(it == null){
                     //만일 조회했던 book 에서 null 이 나왔을 경우에만 저장
                     bookSearchViewModel.saveBook(book)
-                    Snackbar.make(view, "Book has saved", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, "관심목록에 저장되었습니다.", Snackbar.LENGTH_SHORT).show()
                 }
                 else{
                     //아니면 경고메세지
-                    Snackbar.make(view, "already has saved", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, "이미 관심목록에 존재합니다.", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
