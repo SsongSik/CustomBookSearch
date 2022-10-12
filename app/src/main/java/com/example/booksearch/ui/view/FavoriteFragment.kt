@@ -1,6 +1,8 @@
 package com.example.booksearch.ui.view
 
+import android.graphics.*
 import android.os.Bundle
+import android.text.TextPaint
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,7 @@ import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class FavoriteFragment : Fragment(){
 
@@ -81,14 +84,19 @@ class FavoriteFragment : Fragment(){
                 bookSearchViewModel.favoriteBooks.collectLatest {
                     if(it.isEmpty()){
                         binding.favoriteFalseBooks.visibility = View.VISIBLE
-                        binding.rvFavoriteBooks.visibility = View.INVISIBLE
+                        binding.favoriteSumPrice.visibility = View.INVISIBLE
                     }else {
                         binding.favoriteFalseBooks.visibility = View.INVISIBLE
-                        binding.rvFavoriteBooks.visibility = View.VISIBLE
-                        bookSearchAdapter.submitList(it)
+                        binding.favoriteSumPrice.visibility = View.VISIBLE
                     }
+                    bookSearchAdapter.submitList(it)
                 }
             }
+        }
+        val dec = DecimalFormat("#,###")
+        //총 가격
+        bookSearchViewModel.sumPrice.observe(viewLifecycleOwner){
+            binding.favoriteSumPrice.text = "총 가격 : ${dec.format(it)} 원"
         }
     }
 
@@ -129,6 +137,66 @@ class FavoriteFragment : Fragment(){
                         bookSearchViewModel.saveBook(book)
                     }
                 }.show()
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                //스와이프 할 때 나타나는 색 및 아이콘
+                val icon: Bitmap
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    val itemView = viewHolder.itemView
+                    val height = (itemView.bottom - itemView.top).toFloat()
+                    val width = height / 4
+                    val paint = Paint()
+                    if (dX < 0) {
+                        paint.color = Color.parseColor("#ff0000")
+                        val background = RectF(
+                            itemView.right.toFloat() + dX,
+                            itemView.top.toFloat(),
+                            itemView.right.toFloat(),
+                            itemView.bottom.toFloat()
+                        )
+                        c.drawRect(background, paint)
+
+                        icon = BitmapFactory.decodeResource(resources, R.drawable.ic_menu_delete)
+                        val iconDst = RectF(
+                            itemView.right.toFloat() - 3 * width,
+                            itemView.top.toFloat() + width,
+                            itemView.right.toFloat() - width,
+                            itemView.bottom.toFloat() - width
+                        )
+                        c.drawBitmap(icon, null, iconDst, null)
+
+                        val text = "삭제"
+                        val textPaint = TextPaint()
+                        textPaint.textSize = 50f
+                        textPaint.color = Color.WHITE
+                        val bounds = Rect()
+                        textPaint.getTextBounds(text, 0, text.length, bounds)
+                        val textHeight = bounds.height()
+                        val textWidth = textPaint.measureText(text)
+                        val textX = itemView.right - 3 * width - itemView.paddingRight - textWidth
+                        val textY = itemView.top + height / 2f + textHeight / 2f
+
+                        c.drawText(text, textX, textY, textPaint)
+                    }
+                }
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
             }
         }
         //리사이클러뷰와 연결

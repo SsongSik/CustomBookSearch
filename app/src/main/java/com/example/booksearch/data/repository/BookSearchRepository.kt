@@ -25,6 +25,8 @@ interface BookSearchRepository {
 
     fun favoriteFalse(isbn : String) : Book
 
+    fun sumPrice() : LiveData<Int>
+
     //DataStore
     suspend fun saveSortMode(mode : String)
 

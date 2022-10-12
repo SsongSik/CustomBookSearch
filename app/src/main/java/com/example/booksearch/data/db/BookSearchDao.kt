@@ -1,5 +1,6 @@
 package com.example.booksearch.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.booksearch.data.model.Book
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,11 @@ interface BookSearchDao {
 //    fun getFavoriteBooks() : LiveData<List<Book>>
     fun getFavoriteBooks() : Flow<List<Book>>
 
+    //관심목록에 담기를 클릭했을 때 이미 있는지 판단하는 쿼리
     @Query("SELECT * FROM books WHERE isbn = :isBn")
     fun favoriteFalse(isBn : String) : Book
+
+    //관심목록에 있는 책들의 총 가격
+    @Query("SELECT SUM(sale_price) FROM books")
+    fun sumPrice() : LiveData<Int>
 }

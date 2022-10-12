@@ -51,6 +51,10 @@ class BookSearchRepositoryImpl(
         return db.bookSearchDao().favoriteFalse(isbn)
     }
 
+    override fun sumPrice(): LiveData<Int> {
+        return db.bookSearchDao().sumPrice()
+    }
+
     //DataStore
     private object PreferencesKeys {
         //저장, 불러올 키를 정의, String 사용
