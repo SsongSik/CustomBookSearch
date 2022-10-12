@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.booksearch.data.model.Book
 import kotlinx.coroutines.flow.Flow
+import androidx.paging.PagingSource as PagingSource
 
 @Dao
 interface BookSearchDao {
@@ -28,4 +29,9 @@ interface BookSearchDao {
     //관심목록에 있는 책들의 총 가격
     @Query("SELECT SUM(sale_price) FROM books")
     fun sumPrice() : LiveData<Int>
+
+    //Paging
+    //PagingSource 로 반환받는 Paging
+    @Query("SELECT * FROM books")
+    fun getFavoritePagingBooks() : PagingSource<Int, Book>
 }

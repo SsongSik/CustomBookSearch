@@ -1,6 +1,8 @@
 package com.example.booksearch.ui.viewmodel
 
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.data.model.SearchResponse
 import com.example.booksearch.data.repository.BookSearchRepository
@@ -82,5 +84,11 @@ class BookSearchViewModel(
         bookSearchRepository.getSortMode().first()
     }
 
+    //Paging
+    val favoritePagingBooks : StateFlow<PagingData<Book>> =
+        bookSearchRepository.getFavoritePagingBooks()
+            .cachedIn(viewModelScope) //코루틴이 데이터 스트림을 캐시 가능하게함
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagingData.empty())
+            //ui 에서 감시해야 하기 때문에 stateFlow 로 만듬
 
 }

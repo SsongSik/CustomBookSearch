@@ -16,14 +16,14 @@ class BookSearchViewHolder(
         val author = book.authors.toString().removeSurrounding("[", "]")
         val publisher = book.publisher
         val date = if(book.datetime.isNotEmpty()) book.datetime.substring(0, 10) else ""
-        val price = dec.format(book.price.toLong())
+        val salesPrice = dec.format(book.salePrice.toLong())
 
         itemView.apply{
             binding.ivArticleImage.load(book.thumbnail)
             binding.tvTitle.text = book.title
             binding.tvAuthor.text = "$author | $publisher"
             binding.tvDatetime.text = date
-            binding.tvPrice.text = "$price 원"
+            binding.tvPrice.text = "$salesPrice 원"
         }
     }
 }

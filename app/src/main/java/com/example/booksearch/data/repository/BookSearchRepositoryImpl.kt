@@ -6,11 +6,15 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.booksearch.data.api.RetrofitInstance.api
 import com.example.booksearch.data.db.BookSearchDatabase
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.data.model.SearchResponse
 import com.example.booksearch.data.repository.BookSearchRepositoryImpl.PreferencesKeys.SORT_MODE
+import com.example.booksearch.util.Constant.PAGING_SIZE
 import com.example.booksearch.util.Sort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -83,5 +87,21 @@ class BookSearchRepositoryImpl(
             .map { prefs ->
                 prefs[SORT_MODE] ?: Sort.ACCURACY.value
             }
+    }
+
+    //Paging
+    override fun getFavoritePagingBooks(): Flow<PagingData<Book>> {
+        val pagingSourceFactory = { db.bookSearchDao().getFavoritePagingBooks() }
+
+        //Pager 를 구현하기 위해서는 Config 를 전달해야함
+        //viewholder 에 넣을 사이즈를 담음
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGING_SIZE,
+                enablePlaceholders = false,
+                maxSize = PAGING_SIZE * 3
+            ),
+            pagingSourceFactory = pagingSourceFactory
+        ).flow
     }
 }

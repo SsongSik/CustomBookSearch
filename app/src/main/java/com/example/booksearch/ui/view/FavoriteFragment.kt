@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.booksearch.R
 import com.example.booksearch.databinding.FragmentFavoriteBinding
 import com.example.booksearch.ui.adapter.BookSearchAdapter
+import com.example.booksearch.ui.adapter.BookSearchPagingAdapter
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -31,7 +32,8 @@ class FavoriteFragment : Fragment(){
         get() = _binding!!
 
     private lateinit var bookSearchViewModel : BookSearchViewModel
-    private lateinit var bookSearchAdapter : BookSearchAdapter
+//    private lateinit var bookSearchAdapter : BookSearchAdapter
+    private lateinit var bookSearchAdapter : BookSearchPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,29 +81,52 @@ class FavoriteFragment : Fragment(){
 //        }
 
         //StateFlow
+//        viewLifecycleOwner.lifecycleScope.launch{
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+//                bookSearchViewModel.favoriteBooks.collectLatest {
+//                    if(it.isEmpty()){
+//                        binding.favoriteFalseBooks.visibility = View.VISIBLE
+////                        binding.favoriteSumPrice.visibility = View.INVISIBLE
+//                    }else {
+//                        binding.favoriteFalseBooks.visibility = View.INVISIBLE
+////                        binding.favoriteSumPrice.visibility = View.VISIBLE
+//                    }
+//                    bookSearchAdapter.submitList(it)
+//                }
+//            }
+//        }
+        //StateFLow 로 비교 후 있으면 PagingData 로 변환
+        //submitList -> submitData 로 변경
         viewLifecycleOwner.lifecycleScope.launch{
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 bookSearchViewModel.favoriteBooks.collectLatest {
                     if(it.isEmpty()){
                         binding.favoriteFalseBooks.visibility = View.VISIBLE
-                        binding.favoriteSumPrice.visibility = View.INVISIBLE
-                    }else {
-                        binding.favoriteFalseBooks.visibility = View.INVISIBLE
-                        binding.favoriteSumPrice.visibility = View.VISIBLE
                     }
-                    bookSearchAdapter.submitList(it)
+                    else{
+                        binding.favoriteFalseBooks.visibility = View.INVISIBLE
+                    }
+                    bookSearchViewModel.favoritePagingBooks.collectLatest { pagedData ->
+                        bookSearchAdapter.submitData(pagedData)
+                    }
                 }
             }
         }
         val dec = DecimalFormat("#,###")
         //총 가격
         bookSearchViewModel.sumPrice.observe(viewLifecycleOwner){
-            binding.favoriteSumPrice.text = "총 가격 : ${dec.format(it)} 원"
+            if(it == null){
+                binding.favoriteSumPrice.visibility = View.INVISIBLE
+            }else {
+                binding.favoriteSumPrice.text = "총 가격 : ${dec.format(it.toLong())} 원"
+                binding.favoriteSumPrice.visibility = View.VISIBLE
+            }
         }
     }
 
     private fun setUpRecyclerView(){
-        bookSearchAdapter = BookSearchAdapter()
+//        bookSearchAdapter = BookSearchAdapter()
+        bookSearchAdapter = BookSearchPagingAdapter()
         binding.rvFavoriteBooks.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -130,13 +155,23 @@ class FavoriteFragment : Fragment(){
                 //위치 획득
                 val position = viewHolder.bindingAdapterPosition
                 //위치의 book 을 찾음
-                val book = bookSearchAdapter.currentList[position]
-                bookSearchViewModel.deleteBook(book)
-                Snackbar.make(view, "관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
-                    setAction("취소") {
-                        bookSearchViewModel.saveBook(book)
-                    }
-                }.show()
+//                val book = bookSearchAdapter.currentList[position]
+//                bookSearchViewModel.deleteBook(book)
+//                Snackbar.make(view, "관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+//                    setAction("취소") {
+//                        bookSearchViewModel.saveBook(book)
+//                    }
+//                }.show()
+                //current -> peek , null 처리 추가함
+                val pagedBook = bookSearchAdapter.peek(position)
+                pagedBook?.let{ book ->
+                    bookSearchViewModel.deleteBook(book)
+                    Snackbar.make(view, "관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
+                        setAction("취소") {
+                            bookSearchViewModel.saveBook(book)
+                        }
+                    }.show()
+                }
             }
 
             override fun onChildDraw(
