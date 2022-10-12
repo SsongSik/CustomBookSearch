@@ -27,7 +27,7 @@ interface BookSearchDao {
     fun favoriteFalse(isBn : String) : Book
 
     //관심목록에 있는 책들의 총 가격
-    @Query("SELECT SUM(sale_price) FROM books")
+    @Query("SELECT SUM(price) FROM books")
     fun sumPrice() : LiveData<Int>
 
     //Paging

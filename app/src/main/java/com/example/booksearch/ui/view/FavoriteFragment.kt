@@ -118,7 +118,7 @@ class FavoriteFragment : Fragment(){
             if(it == null){
                 binding.favoriteSumPrice.visibility = View.INVISIBLE
             }else {
-                binding.favoriteSumPrice.text = "총 가격 : ${dec.format(it.toLong())} 원"
+                binding.favoriteSumPrice.text = "총(할인) 가격 : ${dec.format(it.toLong())} 원"
                 binding.favoriteSumPrice.visibility = View.VISIBLE
             }
         }
