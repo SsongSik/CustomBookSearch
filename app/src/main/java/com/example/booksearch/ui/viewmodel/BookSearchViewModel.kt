@@ -22,7 +22,7 @@ class BookSearchViewModel(
 
     fun searchBooks(query : String) = viewModelScope.launch(Dispatchers.IO){
         val response = bookSearchRepository.searchBooks(query, getSortMode(), 1, 15)
-
+        //paging 으로 변환
         if(response.isSuccessful){
             response.body()?.let{ body ->
                 _resultSearch.postValue(body)
