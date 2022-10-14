@@ -55,7 +55,10 @@ class BookSearchViewModel(
         _book.postValue(bookFalse)
     }
 
-    //관심 목록에 있는 책들의 총 가격
+    //관심 목록에 있는 책들의 총 할인가격
+    val sumSalesPrice : LiveData<Int> = bookSearchRepository.sumSalesPrice()
+
+    //관심 목록에 있는 책들의 총 가격(할인가격하고는 다름)
     val sumPrice : LiveData<Int> = bookSearchRepository.sumPrice()
 
     //SavedState

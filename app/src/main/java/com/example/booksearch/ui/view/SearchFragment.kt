@@ -10,10 +10,12 @@ import android.widget.Adapter
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.booksearch.R
 import com.example.booksearch.databinding.FragmentSearchBinding
 import com.example.booksearch.ui.adapter.BookSearchAdapter
+import com.example.booksearch.ui.adapter.BookSearchGridAdapter
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.example.booksearch.util.Constant.SEARCH_BOOKS_TIME_DELAY
 
@@ -23,7 +25,7 @@ class SearchFragment : Fragment(){
         get() = _binding!!
 
     private lateinit var bookSearchViewModel: BookSearchViewModel
-    private lateinit var bookSearchAdapter: BookSearchAdapter
+    private lateinit var bookSearchAdapter: BookSearchGridAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,11 +51,11 @@ class SearchFragment : Fragment(){
 
     }
     private fun setUpRecyclerView(){
-        bookSearchAdapter = BookSearchAdapter()
+        bookSearchAdapter = BookSearchGridAdapter()
         binding.rvSearchResult.apply {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            layoutManager = GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+//            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             adapter = bookSearchAdapter
         }
         bookSearchAdapter.setOnItemClickListener {

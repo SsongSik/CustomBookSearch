@@ -55,6 +55,10 @@ class BookSearchRepositoryImpl(
         return db.bookSearchDao().favoriteFalse(isbn)
     }
 
+    override fun sumSalesPrice(): LiveData<Int> {
+        return db.bookSearchDao().sumSalesPrice()
+    }
+
     override fun sumPrice(): LiveData<Int> {
         return db.bookSearchDao().sumPrice()
     }
