@@ -66,7 +66,6 @@ class SearchFragment : Fragment(){
         }
     }
 
-
     private fun setUpRecyclerView(){
         bookSearchAdapter = BookSearchGridPagingAdapter()
         binding.rvSearchResult.apply {
