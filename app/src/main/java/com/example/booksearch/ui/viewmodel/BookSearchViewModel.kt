@@ -16,6 +16,7 @@ class BookSearchViewModel(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(){
 
+    //검색 결과 LiveData -> Paging 으로 변경함으로써 더이상 사용안함
     private val _resultSearch = MutableLiveData<SearchResponse>()
     val resultSearch : LiveData<SearchResponse>
         get() = _resultSearch
@@ -88,10 +89,25 @@ class BookSearchViewModel(
     }
 
     //Paging
+    //관심목록 PagingData
     val favoritePagingBooks : StateFlow<PagingData<Book>> =
         bookSearchRepository.getFavoritePagingBooks()
             .cachedIn(viewModelScope) //코루틴이 데이터 스트림을 캐시 가능하게함
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagingData.empty())
             //ui 에서 감시해야 하기 때문에 stateFlow 로 만듬
+
+    //검색목록 PagingData
+    private val _searchPagingResult = MutableStateFlow<PagingData<Book>>(PagingData.empty())
+    val searchPagingResult : StateFlow<PagingData<Book>> = _searchPagingResult.asStateFlow()
+
+    fun searchBooksPaging(query : String) {
+        viewModelScope.launch{
+            bookSearchRepository.searchBooksPaging(query, getSortMode())
+                .cachedIn(viewModelScope)
+                .collect{
+                    _searchPagingResult.value = it
+                }
+        }
+    }
 
 }

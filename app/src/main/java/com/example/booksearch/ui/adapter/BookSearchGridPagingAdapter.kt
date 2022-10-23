@@ -2,25 +2,30 @@ package com.example.booksearch.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.databinding.ItemBookPreviewBinding
+import com.example.booksearch.databinding.ItemBookSearchBinding
 
-class BookSearchAdapter : ListAdapter<Book, BookSearchViewHolder>(BookDiffCallback) {
+//검색 화면 페이징 어댑터, GridLayout 으로 설정하여 따로 어댑터를 만들어서 활용했음
+class BookSearchGridPagingAdapter : PagingDataAdapter<Book, BookSearchViewGridHolder>(BookDiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookSearchViewHolder {
-        return BookSearchViewHolder(
-            ItemBookPreviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookSearchViewGridHolder {
+        return BookSearchViewGridHolder(
+            ItemBookSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: BookSearchViewHolder, position: Int) {
-        val book = currentList[position]
-        holder.bind(book)
-        holder.itemView.setOnClickListener {
-            onItemClickListener?.let{ it(book) }
+    override fun onBindViewHolder(holder: BookSearchViewGridHolder, position: Int) {
+        val pagedBook = getItem(position)
+        pagedBook?.let { book ->
+            holder.bind(book)
+            holder.itemView.setOnClickListener {
+                onItemClickListener?.let{ it(book) }
+            }
         }
     }
 

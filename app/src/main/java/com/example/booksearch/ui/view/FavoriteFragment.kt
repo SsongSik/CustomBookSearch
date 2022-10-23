@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.booksearch.R
 import com.example.booksearch.databinding.FragmentFavoriteBinding
-import com.example.booksearch.ui.adapter.BookSearchAdapter
 import com.example.booksearch.ui.adapter.BookSearchPagingAdapter
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -106,6 +105,7 @@ class FavoriteFragment : Fragment(){
                     else{
                         binding.favoriteFalseBooks.visibility = View.INVISIBLE
                     }
+                    //페이징 데이터로 변환하여 submitData 로 변환
                     bookSearchViewModel.favoritePagingBooks.collectLatest { pagedData ->
                         bookSearchAdapter.submitData(pagedData)
                     }
@@ -113,15 +113,16 @@ class FavoriteFragment : Fragment(){
             }
         }
         val dec = DecimalFormat("#,###")
-        //총 가격
+        //총 할인 가격
         bookSearchViewModel.sumSalesPrice.observe(viewLifecycleOwner){
-            if(it == null){
+            if(it == null){ //관심목록에 아무것도 없다는 뜻
                 binding.favoriteSumPrice.visibility = View.INVISIBLE
             }else {
                 binding.favoriteSumPrice.text = "할인 가격 : ${dec.format(it.toLong())} 원"
                 binding.favoriteSumPrice.visibility = View.VISIBLE
             }
         }
+        //총 가격
         bookSearchViewModel.sumPrice.observe(viewLifecycleOwner){
             if(it == null){
                 binding.favoriteSumRealPrice.visibility = View.INVISIBLE
@@ -132,6 +133,7 @@ class FavoriteFragment : Fragment(){
         }
     }
 
+    //리사이클러뷰 어댑터를 페이징어댑터로 변경
     private fun setUpRecyclerView(){
 //        bookSearchAdapter = BookSearchAdapter()
         bookSearchAdapter = BookSearchPagingAdapter()

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.databinding.ItemBookPreviewBinding
 
+//관심목록 페이징 어댑터
 class BookSearchPagingAdapter : PagingDataAdapter<Book, BookSearchViewHolder>(BookDiffCallback) {
 
     override fun onBindViewHolder(holder: BookSearchViewHolder, position: Int) {

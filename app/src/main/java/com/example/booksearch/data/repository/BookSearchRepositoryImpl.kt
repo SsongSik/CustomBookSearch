@@ -109,6 +109,7 @@ class BookSearchRepositoryImpl(
         ).flow
     }
 
+    //검색 Paging
     override fun searchBooksPaging(query: String, sort: String): Flow<PagingData<Book>> {
         val pagingSourceFactory = { BookSearchPagingSource(query, sort)}
 
