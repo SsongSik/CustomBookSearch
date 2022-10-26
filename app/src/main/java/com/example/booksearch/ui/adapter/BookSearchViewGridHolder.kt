@@ -7,6 +7,7 @@ import com.example.booksearch.databinding.ItemBookPreviewBinding
 import com.example.booksearch.databinding.ItemBookSearchBinding
 import java.text.DecimalFormat
 
+// 검색화면에서 사용하는 Grid RV Holder
 class BookSearchViewGridHolder(
     private val binding : ItemBookSearchBinding
 ) : RecyclerView.ViewHolder(binding.root){

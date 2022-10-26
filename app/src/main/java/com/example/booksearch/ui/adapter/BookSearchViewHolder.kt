@@ -6,6 +6,7 @@ import com.example.booksearch.data.model.Book
 import com.example.booksearch.databinding.ItemBookPreviewBinding
 import java.text.DecimalFormat
 
+//관심목록에서 사용하는 RV Holder
 class BookSearchViewHolder(
     private val binding : ItemBookPreviewBinding
 ) : RecyclerView.ViewHolder(binding.root){
