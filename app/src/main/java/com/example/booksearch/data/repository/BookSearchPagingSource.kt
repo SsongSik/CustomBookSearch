@@ -33,6 +33,7 @@ class BookSearchPagingSource(
             //값이 트루면 마지막 페이지 이기 때문에 nextKey 의 값을 null 로 반환
 
             val data = response.body()?.documents!!
+            //만일 시작페이지라면 null값을 그게 아니라면 그 전페이지를 보여주어야하기 때문에 -1을 해준다.
             val prevKey = if(pageNumber == STARTING_PAGE_INDEX) null else pageNumber - 1
             val nextKey = if(endOfPaginationReached) {
                 null
