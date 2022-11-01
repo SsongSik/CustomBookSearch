@@ -115,9 +115,9 @@ class BookSearchRepositoryImpl(
 
         return Pager(
             config = PagingConfig(
-                pageSize = PAGING_SIZE,
+                pageSize = PAGING_SIZE, //한 페이지에 보여질 수
                 enablePlaceholders = false,
-                maxSize = PAGING_SIZE * 3
+                maxSize = PAGING_SIZE * 3 //결과 페이지
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow
