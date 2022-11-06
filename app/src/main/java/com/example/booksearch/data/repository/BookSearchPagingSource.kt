@@ -28,6 +28,7 @@ class BookSearchPagingSource(
         return try{
             // 키 값을 받아와서 pageNumber 에 저장
             val pageNumber = params.key ?: STARTING_PAGE_INDEX
+            //처음 로딩되는 페이지는 Page Size 의 3배 -> 초과할경우 첫 로딩페이지 수를 정해주어야함
             val response = api.searchBooks(query, sort, pageNumber, params.loadSize)
             val endOfPaginationReached = response.body()?.meta?.isEnd!!
             //값이 트루면 마지막 페이지 이기 때문에 nextKey 의 값을 null 로 반환
