@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -19,16 +20,20 @@ import com.example.booksearch.ui.adapter.BookSearchGridPagingAdapter
 import com.example.booksearch.ui.adapter.BookSearchLoadStateAdapter
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.example.booksearch.util.Constant.SEARCH_BOOKS_TIME_DELAY
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SearchFragment : Fragment(){
     private var _binding : FragmentSearchBinding?= null
     private val binding : FragmentSearchBinding
         get() = _binding!!
 
-    private lateinit var bookSearchViewModel: BookSearchViewModel
+//    private lateinit var bookSearchViewModel: BookSearchViewModel
+    private val bookSearchViewModel by activityViewModels<BookSearchViewModel>()
+
 //    private lateinit var bookSearchAdapter: BookSearchGridAdapter
     private lateinit var bookSearchAdapter : BookSearchGridPagingAdapter
 
@@ -45,7 +50,7 @@ class SearchFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bookSearchViewModel = (activity as MainActivity).bookSearchViewModel
+//        bookSearchViewModel = (activity as MainActivity).bookSearchViewModel
         setUpRecyclerView()
         searchBooks()
         setupLoadState()

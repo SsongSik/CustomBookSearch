@@ -5,19 +5,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.booksearch.R
 import com.example.booksearch.databinding.FragmentSettingBinding
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
 import com.example.booksearch.util.Sort
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingFragment : Fragment(){
     private var _binding : FragmentSettingBinding?= null
     private val binding : FragmentSettingBinding
         get() = _binding!!
 
-    private lateinit var bookSearchViewModel : BookSearchViewModel
+//    private lateinit var bookSearchViewModel : BookSearchViewModel
+    private val bookSearchViewModel by activityViewModels<BookSearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +34,7 @@ class SettingFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bookSearchViewModel = (activity as MainActivity).bookSearchViewModel
+//        bookSearchViewModel = (activity as MainActivity).bookSearchViewModel
 
         saveSetting()
         loadSetting()

@@ -1,11 +1,7 @@
 package com.example.booksearch.ui.view
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,13 +9,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.booksearch.R
-import com.example.booksearch.data.db.BookSearchDatabase
-import com.example.booksearch.data.repository.BookSearchRepositoryImpl
 import com.example.booksearch.databinding.ActivityMainBinding
 import com.example.booksearch.ui.viewmodel.BookSearchViewModel
-import com.example.booksearch.ui.viewmodel.BookSearchViewModelProviderFactory
-import com.example.booksearch.util.Constant.DATASTORE_NAME
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val binding : ActivityMainBinding by lazy{
@@ -30,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private val Context.dataStore by preferencesDataStore(DATASTORE_NAME)
+//    private val Context.dataStore by preferencesDataStore(DATASTORE_NAME)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +37,11 @@ class MainActivity : AppCompatActivity() {
 
         setupJetpackNavigation()
 
-        val database = BookSearchDatabase.getInstance(this)
-        //repository 선언 -> 팩토리에 담고, viewModel 에게 전달
-        val bookSearchRepository = BookSearchRepositoryImpl(database, dataStore)
-        val factory = BookSearchViewModelProviderFactory(bookSearchRepository, this)
-        bookSearchViewModel = ViewModelProvider(this, factory)[BookSearchViewModel::class.java]
+//        val database = BookSearchDatabase.getInstance(this)
+//        //repository 선언 -> 팩토리에 담고, viewModel 에게 전달
+//        val bookSearchRepository = BookSearchRepositoryImpl(database, dataStore)
+//        val factory = BookSearchViewModelProviderFactory(bookSearchRepository, this)
+//        bookSearchViewModel = ViewModelProvider(this, factory)[BookSearchViewModel::class.java]
 
     }
 

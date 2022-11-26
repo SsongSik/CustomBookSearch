@@ -6,12 +6,15 @@ import androidx.paging.cachedIn
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.data.model.SearchResponse
 import com.example.booksearch.data.repository.BookSearchRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BookSearchViewModel(
+@HiltViewModel
+class BookSearchViewModel @Inject constructor(
     private val bookSearchRepository: BookSearchRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel(){

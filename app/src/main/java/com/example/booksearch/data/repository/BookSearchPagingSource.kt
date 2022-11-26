@@ -2,7 +2,7 @@ package com.example.booksearch.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.booksearch.data.api.RetrofitInstance.api
+import com.example.booksearch.data.api.BookSearchApi
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.util.Constant.PAGING_SIZE
 import retrofit2.HttpException
@@ -10,6 +10,7 @@ import java.io.IOException
 
 //PagingSource
 class BookSearchPagingSource(
+    private val api : BookSearchApi,
     private val query : String,
     private val sort : String,
 ) : PagingSource<Int, Book>(){

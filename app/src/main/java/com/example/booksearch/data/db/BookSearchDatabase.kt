@@ -17,21 +17,21 @@ abstract class BookSearchDatabase : RoomDatabase(){
 
     abstract fun bookSearchDao() : BookSearchDao
 
-    companion object{
-        @Volatile
-        private var INSTANCE : BookSearchDatabase?= null
-
-        private fun buildDatabase(context : Context) : BookSearchDatabase =
-            Room.databaseBuilder(
-                context.applicationContext,
-                BookSearchDatabase::class.java,
-                "favorite-books"
-            ).build()
-
-        fun getInstance(context : Context) : BookSearchDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
-
-    }
+//    companion object{
+//        @Volatile
+//        private var INSTANCE : BookSearchDatabase?= null
+//
+//        private fun buildDatabase(context : Context) : BookSearchDatabase =
+//            Room.databaseBuilder(
+//                context.applicationContext,
+//                BookSearchDatabase::class.java,
+//                "favorite-books"
+//            ).build()
+//
+//        fun getInstance(context : Context) : BookSearchDatabase =
+//            INSTANCE ?: synchronized(this) {
+//                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+//            }
+//
+//    }
 }

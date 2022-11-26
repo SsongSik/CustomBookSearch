@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.booksearch.data.api.RetrofitInstance.api
+import com.example.booksearch.data.api.BookSearchApi
 import com.example.booksearch.data.db.BookSearchDatabase
 import com.example.booksearch.data.model.Book
 import com.example.booksearch.data.model.SearchResponse
@@ -21,10 +21,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BookSearchRepositoryImpl(
+@Singleton
+class BookSearchRepositoryImpl  @Inject constructor(
     private val db : BookSearchDatabase,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val api : BookSearchApi
 ) : BookSearchRepository{
     override suspend fun searchBooks(
         query: String,
@@ -111,7 +115,7 @@ class BookSearchRepositoryImpl(
 
     //검색 Paging
     override fun searchBooksPaging(query: String, sort: String): Flow<PagingData<Book>> {
-        val pagingSourceFactory = { BookSearchPagingSource(query, sort)}
+        val pagingSourceFactory = { BookSearchPagingSource(api, query, sort)}
 
         return Pager(
             config = PagingConfig(
