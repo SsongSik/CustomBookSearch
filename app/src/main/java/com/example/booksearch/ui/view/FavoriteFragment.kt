@@ -3,11 +3,11 @@ package com.example.booksearch.ui.view
 import android.graphics.*
 import android.os.Bundle
 import android.text.TextPaint
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.booksearch.R
 import com.example.booksearch.databinding.FragmentFavoriteBinding
 import com.example.booksearch.ui.adapter.BookSearchPagingAdapter
-import com.example.booksearch.ui.viewmodel.BookSearchViewModel
+import com.example.booksearch.ui.viewmodel.FavoriteViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +34,8 @@ class FavoriteFragment : Fragment(){
         get() = _binding!!
 
 //    private lateinit var bookSearchViewModel : BookSearchViewModel
-    private val bookSearchViewModel by activityViewModels<BookSearchViewModel>()
+//    private val bookSearchViewModel by activityViewModels<BookSearchViewModel>()
+    private val favoriteViewModel by viewModels<FavoriteViewModel>()
 //    private lateinit var bookSearchAdapter : BookSearchAdapter
     private lateinit var bookSearchAdapter : BookSearchPagingAdapter
 
@@ -102,7 +103,7 @@ class FavoriteFragment : Fragment(){
         //submitList -> submitData 로 변경
         viewLifecycleOwner.lifecycleScope.launch{
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                bookSearchViewModel.favoriteBooks.collectLatest {
+                favoriteViewModel.favoriteBooks.collectLatest {
                     if(it.isEmpty()){
                         binding.favoriteFalseBooks.visibility = View.VISIBLE
                     }
@@ -110,7 +111,7 @@ class FavoriteFragment : Fragment(){
                         binding.favoriteFalseBooks.visibility = View.INVISIBLE
                     }
                     //페이징 데이터로 변환하여 submitData 로 변환
-                    bookSearchViewModel.favoritePagingBooks.collectLatest { pagedData ->
+                    favoriteViewModel.favoritePagingBooks.collectLatest { pagedData ->
                         bookSearchAdapter.submitData(pagedData)
                     }
                 }
@@ -118,7 +119,7 @@ class FavoriteFragment : Fragment(){
         }
         val dec = DecimalFormat("#,###")
         //총 할인 가격
-        bookSearchViewModel.sumSalesPrice.observe(viewLifecycleOwner){
+        favoriteViewModel.sumSalesPrice.observe(viewLifecycleOwner){
             if(it == null){ //관심목록에 아무것도 없다는 뜻
                 binding.favoriteSumPrice.visibility = View.INVISIBLE
             }else {
@@ -127,7 +128,7 @@ class FavoriteFragment : Fragment(){
             }
         }
         //총 가격
-        bookSearchViewModel.sumPrice.observe(viewLifecycleOwner){
+        favoriteViewModel.sumPrice.observe(viewLifecycleOwner){
             if(it == null){
                 binding.favoriteSumRealPrice.visibility = View.INVISIBLE
             }else{
@@ -179,10 +180,10 @@ class FavoriteFragment : Fragment(){
                 //current -> peek , null 처리 추가함
                 val pagedBook = bookSearchAdapter.peek(position)
                 pagedBook?.let{ book ->
-                    bookSearchViewModel.deleteBook(book)
+                    favoriteViewModel.deleteBook(book)
                     Snackbar.make(view, "관심목록에서 삭제되었습니다.", Snackbar.LENGTH_SHORT).apply {
                         setAction("취소") {
-                            bookSearchViewModel.saveBook(book)
+                            favoriteViewModel.saveBook(book)
                         }
                     }.show()
                 }

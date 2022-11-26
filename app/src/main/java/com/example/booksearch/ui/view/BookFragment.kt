@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.booksearch.databinding.FragmentBookBinding
-import com.example.booksearch.ui.viewmodel.BookSearchViewModel
+import com.example.booksearch.ui.viewmodel.BookViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +22,8 @@ class BookFragment : Fragment(){
 
     private val args : BookFragmentArgs by navArgs<BookFragmentArgs>()
 //    private lateinit var bookSearchViewModel : BookSearchViewModel
-    private val bookSearchViewModel by activityViewModels<BookSearchViewModel>()
+//    private val bookSearchViewModel by activityViewModels<BookSearchViewModel>()
+    private val bookViewModel by viewModels<BookViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,12 +49,12 @@ class BookFragment : Fragment(){
 
         binding.fabFavorite.setOnClickListener{
             //이미 관심목록에 있는지 판단하기 위해
-            bookSearchViewModel.favoriteFalse(book)
+            bookViewModel.favoriteFalse(book)
 
-            bookSearchViewModel.book.observe(viewLifecycleOwner){
+            bookViewModel.book.observe(viewLifecycleOwner){
                 if(it == null){
                     //만일 조회했던 book 에서 null 이 나왔을 경우에만 저장
-                    bookSearchViewModel.saveBook(book)
+                    bookViewModel.saveBook(book)
                     Snackbar.make(view, "관심목록에 저장되었습니다.", Snackbar.LENGTH_SHORT).show()
                 }
                 else{
