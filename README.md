@@ -28,5 +28,6 @@
 | **Networking** | Retrofit2, OkHttp3           |
 | **Asynchronous**                 | Coroutine |
 | **Local DB**                 | Room, DataStore |
+| **Unit Test**                 | JUnit4 |
 
 
