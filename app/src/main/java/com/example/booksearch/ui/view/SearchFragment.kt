@@ -64,7 +64,6 @@ class SearchFragment : Fragment(){
                 bookSearchAdapter.submitData(it)
             }
         }
-
     }
     private fun setUpRecyclerView(){
         bookSearchAdapter = BookSearchGridPagingAdapter()
